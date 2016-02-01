@@ -32,13 +32,32 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
-        <!-- ODN about activity-->
-        <activity android:name=".ODNAboutActivity"
-                    android:label="@string/action_about_odn" >
+        <!-- ODN about activity -->
+        <activity
+            android:name=".ODNAboutActivity"
+            android:label="@string/action_about_odn">
             <intent-filter>
-                <action android:name="com.xiezhenlin.odn.about"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="ODNAbout" />
+                <action android:name="com.xiezhenlin.odn.about" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- ODN settings activity -->
+        <activity
+            android:name=".ODNSettingsActivity"
+            android:label="@string/action_settings_odn">
+            <intent-filter>
+                <action android:name="com.xiezhenlin.odn.settings" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ODNADDActivity"
+            android:label="@string/action_add_odn">
+            <intent-filter>
+                <action android:name="com.xiezhenlin.odn.add" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

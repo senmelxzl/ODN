@@ -9,41 +9,21 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class ODNMainActivity extends AppCompatActivity {
     // Remove the below line after defining your own ad unit ID.
     private static final String TOAST_TEXT = "Test ads are being shown. "
             + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
-
-    private static final int START_LEVEL = 1;
-    private int mLevel;
-    private Button mNextLevelButton;
+    private static final  String ODN_ABOUT_ACTION="com.xiezhenlin.odn.about";
+    private static final  String ODN_SETTINGS_ACTION="com.xiezhenlin.odn.settings";
+    private static  final String ODN_ADD_ACTION="com.xiezhenlin.odn.add";
     private InterstitialAd mInterstitialAd;
-    private TextView mLevelTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_odn_main);
-
-        // Create the next level button, which tries to show an interstitial when clicked.
-        mNextLevelButton = ((Button) findViewById(R.id.next_level_button));
-        mNextLevelButton.setEnabled(false);
-        mNextLevelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showInterstitial();
-            }
-        });
-
-        // Create the text view to show the level number.
-        mLevelTextView = (TextView) findViewById(R.id.level);
-        mLevel = START_LEVEL;
-
         // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
@@ -68,10 +48,13 @@ public class ODNMainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            return true;
-        }else if(id == R.id.action_aboutme){
-            Intent intent = new Intent("com.xiezhenlin.odn.about");
-            intent.addCategory("ODNAbout");
+            Intent intent = new Intent(ODN_SETTINGS_ACTION);
+            startActivity(intent);
+        }else if(id == R.id.action_about){
+            Intent intent = new Intent(ODN_ABOUT_ACTION);
+            startActivity(intent);
+        }else if(id == R.id.action_odn_add){
+            Intent intent = new Intent(ODN_ADD_ACTION);
             startActivity(intent);
         }
 
@@ -84,12 +67,10 @@ public class ODNMainActivity extends AppCompatActivity {
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                mNextLevelButton.setEnabled(true);
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                mNextLevelButton.setEnabled(true);
             }
 
             @Override
@@ -113,7 +94,6 @@ public class ODNMainActivity extends AppCompatActivity {
 
     private void loadInterstitial() {
         // Disable the next level button and load the ad.
-        mNextLevelButton.setEnabled(false);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         mInterstitialAd.loadAd(adRequest);
@@ -121,7 +101,6 @@ public class ODNMainActivity extends AppCompatActivity {
 
     private void goToNextLevel() {
         // Show the next level and reload the ad to prepare for the level after.
-        mLevelTextView.setText("Level " + (++mLevel));
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
     }
