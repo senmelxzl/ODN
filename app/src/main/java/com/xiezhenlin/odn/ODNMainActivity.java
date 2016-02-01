@@ -4,6 +4,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -13,7 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class ODNMainActivity extends AppCompatActivity {
     // Remove the below line after defining your own ad unit ID.
     private static final String TOAST_TEXT = "Test ads are being shown. "
             + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_odn_main);
 
         // Create the next level button, which tries to show an interstitial when clicked.
         mNextLevelButton = ((Button) findViewById(R.id.next_level_button));
@@ -68,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == R.id.action_aboutme){
+            Intent intent = new Intent("com.xiezhenlin.odn.about");
+            intent.addCategory("ODNAbout");
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
