@@ -34,8 +34,7 @@
             android:theme="@android:style/Theme.Translucent" />
         <!-- ODN about activity -->
         <activity
-            android:name=".ODNAboutActivity"
-            android:label="@string/action_about_odn">
+            android:name=".ODNAboutActivity">
             <intent-filter>
                 <action android:name="com.xiezhenlin.odn.about" />
 
@@ -44,16 +43,14 @@
         </activity>
         <!-- ODN settings activity -->
         <activity
-            android:name=".ODNSettingsActivity"
-            android:label="@string/action_settings_odn">
+            android:name=".ODNSettingsActivity">
             <intent-filter>
                 <action android:name="com.xiezhenlin.odn.settings" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ODNADDActivity"
-            android:label="@string/action_add_odn">
+        <activity android:name=".ODNADDActivity">
             <intent-filter>
                 <action android:name="com.xiezhenlin.odn.add" />
 

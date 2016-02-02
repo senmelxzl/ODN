@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.xiezhenlin.odn.domain.NoteDomain;
+import com.xiezhenlin.odn.utils.ODNDateTools;
 
 public class ODNADDActivity extends AppCompatActivity {
 
@@ -49,7 +50,7 @@ public class ODNADDActivity extends AppCompatActivity {
         NoteDomain submitODNDomain=new NoteDomain();
         submitODNDomain.setOdn_id(1);
         submitODNDomain.setOdn_tile(odnTitle.getText().toString());
-        submitODNDomain.setOdn_date(152);
+        submitODNDomain.setOdn_date(ODNDateTools.getDate());
     }
 
     /**
