@@ -3,12 +3,16 @@ package com.xiezhenlin.odn;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.xiezhenlin.odn.domain.NoteDomain;
+import com.xiezhenlin.odn.utils.ODNDBH;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class ODNMainActivity extends AppCompatActivity {
@@ -20,6 +24,8 @@ public class ODNMainActivity extends AppCompatActivity {
     private static  final String ODN_ADD_ACTION="com.xiezhenlin.odn.add";
     private InterstitialAd mInterstitialAd;
 
+    private ODNDBH mODNDBH;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +33,12 @@ public class ODNMainActivity extends AppCompatActivity {
         // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
-
-        // Toasts the test ad message on the screen. Remove this after defining your own ad unit ID.
-        //Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show();
+        mODNDBH=new ODNDBH(this);
+        NoteDomain mNoteDomain=new NoteDomain();
+        mNoteDomain.setOdn_id(1);
+        mNoteDomain.setOdn_comment("One day note");
+        mNoteDomain.setOdn_date("20160401a");
+        mODNDBH.addODN(mNoteDomain);
     }
 
 
@@ -56,6 +65,8 @@ public class ODNMainActivity extends AppCompatActivity {
         }else if(id == R.id.action_odn_add){
             Intent intent = new Intent(ODN_ADD_ACTION);
             startActivity(intent);
+        }else if(id == R.id.action_test){
+            showInterstitial();
         }
 
         return super.onOptionsItemSelected(item);
@@ -85,6 +96,7 @@ public class ODNMainActivity extends AppCompatActivity {
     private void showInterstitial() {
         // Show the ad if it's ready. Otherwise toast and reload the ad.
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+            Toast.makeText(this, "Ad loaded", Toast.LENGTH_SHORT).show();
             mInterstitialAd.show();
         } else {
             Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();

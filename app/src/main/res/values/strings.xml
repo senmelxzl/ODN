@@ -14,4 +14,5 @@
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
     <string name="interstitial_ad_unit_id">ca-app-pub-8203178984843063/8178750230</string>
+    <string name="odn_test">Test Ads</string>
 </resources>

@@ -49,7 +49,7 @@ public class ODNADDActivity extends AppCompatActivity {
     private void odnSubmit() {
         NoteDomain submitODNDomain=new NoteDomain();
         submitODNDomain.setOdn_id(1);
-        submitODNDomain.setOdn_tile(odnTitle.getText().toString());
+        submitODNDomain.setOdn_comment(odnTitle.getText().toString());
         submitODNDomain.setOdn_date(ODNDateTools.getDate());
     }
 

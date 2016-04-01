@@ -5,7 +5,7 @@ package com.xiezhenlin.odn.domain;
  */
 public class NoteDomain {
     private int odn_id;
-    private String odn_tile;
+    private String odn_comment;
     private String odn_date;
 
     public int getOdn_id() {
@@ -16,12 +16,12 @@ public class NoteDomain {
         this.odn_id = odn_id;
     }
 
-    public String getOdn_tile() {
-        return odn_tile;
+    public String getOdn_comment() {
+        return odn_comment;
     }
 
-    public void setOdn_tile(String odn_tile) {
-        this.odn_tile = odn_tile;
+    public void setOdn_comment(String odn_comment) {
+        this.odn_comment = odn_comment;
     }
 
     public String getOdn_date() {
