@@ -33,7 +33,7 @@ public class ODNDBH extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_ODN_TABLE = "CREATE TABLE " + TABLE_ODNCOMMENT +
                 "(" +
-                KEY_ODN_ID + " INTEGER PRIMARY KEY," + // Define a primary key
+                KEY_ODN_ID + " INTEGER PRIMARY KEY," +
                 KEY_ODN_COMMENT_ID + " INTEGER KEY," +
                 KEY_ODN_COMMENT + " TEXT," +
                 KEY_ODN_COMMENT_DATE + " TEXT" +
@@ -51,6 +51,7 @@ public class ODNDBH extends SQLiteOpenHelper {
     }
     // Insert an ODN into the database
     public void addODN(NoteDomain noteDomain) {
+        Log.i(TAG,"addODN start");
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
@@ -60,7 +61,7 @@ public class ODNDBH extends SQLiteOpenHelper {
         try {
             // The user might already exist in the database (i.e. the same user created multiple posts).
             //long userId = addOrUpdateUser(noteDomain.user);
-
+            Log.i(TAG,"ODN comment:"+"Id is "+String.valueOf(noteDomain.getOdn_id())+";"+"comment is "+noteDomain.getOdn_comment()+";"+"comment date is "+noteDomain.getOdn_date());
             ContentValues values = new ContentValues();
             values.put(KEY_ODN_COMMENT_ID, noteDomain.getOdn_id());
             values.put(KEY_ODN_COMMENT, noteDomain.getOdn_comment());
@@ -69,8 +70,9 @@ public class ODNDBH extends SQLiteOpenHelper {
             // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
             db.insertOrThrow(TABLE_ODNCOMMENT, null, values);
             db.setTransactionSuccessful();
+            Log.i(TAG,"addODN done!");
         } catch (Exception e) {
-            Log.d(TAG, "Error while trying to add post to database");
+            Log.d(TAG, "Error while trying to add post to database!");
         } finally {
             db.endTransaction();
         }

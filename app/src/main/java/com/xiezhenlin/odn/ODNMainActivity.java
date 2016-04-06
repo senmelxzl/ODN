@@ -3,16 +3,12 @@ package com.xiezhenlin.odn;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.xiezhenlin.odn.domain.NoteDomain;
-import com.xiezhenlin.odn.utils.ODNDBH;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 public class ODNMainActivity extends AppCompatActivity {
@@ -24,8 +20,6 @@ public class ODNMainActivity extends AppCompatActivity {
     private static  final String ODN_ADD_ACTION="com.xiezhenlin.odn.add";
     private InterstitialAd mInterstitialAd;
 
-    private ODNDBH mODNDBH;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +27,6 @@ public class ODNMainActivity extends AppCompatActivity {
         // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
-        mODNDBH=new ODNDBH(this);
-        NoteDomain mNoteDomain=new NoteDomain();
-        mNoteDomain.setOdn_id(1);
-        mNoteDomain.setOdn_comment("One day note");
-        mNoteDomain.setOdn_date("20160401a");
-        mODNDBH.addODN(mNoteDomain);
     }
 
 

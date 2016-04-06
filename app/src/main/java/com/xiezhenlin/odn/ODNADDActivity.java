@@ -7,13 +7,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.xiezhenlin.odn.domain.NoteDomain;
+import com.xiezhenlin.odn.utils.ODNDBH;
 import com.xiezhenlin.odn.utils.ODNDateTools;
 
 public class ODNADDActivity extends AppCompatActivity {
 
     private EditText odnTitle;
+    private ODNDBH mODNDBH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class ODNADDActivity extends AppCompatActivity {
 
         if (id == R.id.action_odn_submit) {
             odnSubmit();
+            this.finish();
+            Toast.makeText(this,R.string.add_odn_done_tip,Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -47,10 +52,12 @@ public class ODNADDActivity extends AppCompatActivity {
      * submit odn content to database
      */
     private void odnSubmit() {
+        mODNDBH=new ODNDBH(this);
         NoteDomain submitODNDomain=new NoteDomain();
         submitODNDomain.setOdn_id(1);
         submitODNDomain.setOdn_comment(odnTitle.getText().toString());
         submitODNDomain.setOdn_date(ODNDateTools.getDate());
+        mODNDBH.addODN(submitODNDomain);
     }
 
     /**
