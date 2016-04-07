@@ -50,6 +50,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!--Add ODN activity-->
         <activity android:name=".ODNADDActivity">
             <intent-filter>
                 <action android:name="com.xiezhenlin.odn.add" />

@@ -21,7 +21,7 @@ public class ODNDateTools {
      * @return String "yyyyMMdd"格式的日期字符串。
      */
     public static String getDate() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd    hh:mm:ss");
 
         return formatter.format(new Date());
     }

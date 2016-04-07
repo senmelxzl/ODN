@@ -15,5 +15,13 @@
     <!- -->
     <string name="interstitial_ad_unit_id">ca-app-pub-8203178984843063/8178750230</string>
     <string name="odn_test">Test Ads</string>
+
+    <!--add ODN-->
+    <string name="add_odn_done_menu">Done</string>
     <string name="add_odn_done_tip">Add ODN done!</string>
+    <string name="odn_add_successed">Add ODN success!</string>
+    <string name="odn_add_failed">Add ODN failed!</string>
+    <string name="odn_add_tip">Note your mind and memory!</string>
+    <string name="add_odn_none">ODN is none,Note it Now!</string>
+
 </resources>

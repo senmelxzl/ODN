@@ -1,28 +1,28 @@
 package com.xiezhenlin.odn;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.xiezhenlin.odn.dao.ODNDao;
 import com.xiezhenlin.odn.domain.NoteDomain;
-import com.xiezhenlin.odn.utils.ODNDBH;
 import com.xiezhenlin.odn.utils.ODNDateTools;
 
 public class ODNADDActivity extends AppCompatActivity {
-
+    private static final String TAG="ODNADDActivity";
+    private static final int ADD_ODN_RESULT_CODE=1010;
     private EditText odnTitle;
-    private ODNDBH mODNDBH;
+    private ODNDao mODNDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_odn_add);
-        initlayout();
+        mODNDao=new ODNDao(this);
+        InitAddODN_UI();
     }
 
     @Override
@@ -40,9 +40,11 @@ public class ODNADDActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_odn_submit) {
-            odnSubmit();
-            this.finish();
-            Toast.makeText(this,R.string.add_odn_done_tip,Toast.LENGTH_LONG).show();
+            if(!odnTitle.getText().toString().equals("")) {
+                odnSubmit();
+            }else {
+                Toast.makeText(this,R.string.add_odn_none,Toast.LENGTH_LONG).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -52,18 +54,23 @@ public class ODNADDActivity extends AppCompatActivity {
      * submit odn content to database
      */
     private void odnSubmit() {
-        mODNDBH=new ODNDBH(this);
         NoteDomain submitODNDomain=new NoteDomain();
         submitODNDomain.setOdn_id(1);
         submitODNDomain.setOdn_comment(odnTitle.getText().toString());
         submitODNDomain.setOdn_date(ODNDateTools.getDate());
-        mODNDBH.addODN(submitODNDomain);
+        if(mODNDao.addODN(submitODNDomain)){
+            Toast.makeText(this,R.string.odn_add_successed,Toast.LENGTH_LONG).show();
+            setResult(ADD_ODN_RESULT_CODE);
+            finish();
+        }else{
+            Toast.makeText(this,R.string.odn_add_failed,Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
      * init layout view
      */
-    private void initlayout() {
+    private void InitAddODN_UI() {
         odnTitle=(EditText)findViewById(R.id.odn_context);
     }
 }
