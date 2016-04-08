@@ -2,8 +2,12 @@ package com.xiezhenlin.odn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -19,13 +23,18 @@ import com.xiezhenlin.odn.domain.NoteDomain;
 import java.util.ArrayList;
 
 public class ODNMainActivity extends AppCompatActivity {
+    private static final String TAG="ODNMainActivity";
     // Remove the below line after defining your own ad unit ID.
     private static final String TOAST_TEXT = "Test ads are being shown. "
             + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
     private static final String ODN_ABOUT_ACTION = "com.xiezhenlin.odn.about";
     private static final String ODN_SETTINGS_ACTION = "com.xiezhenlin.odn.settings";
     private static final String ODN_ADD_ACTION = "com.xiezhenlin.odn.add";
+
     private InterstitialAd mInterstitialAd;
+    private static Handler mHandler;
+    private static final int TIMER_EVENT_TICK = 1000;
+    private boolean AdIsLoaded=false;
 
     private ODNDao mODNDao;
     private ArrayList<NoteDomain> noteDomains;
@@ -35,13 +44,55 @@ public class ODNMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_odn_main);
-        initUI();
-        // get ODN list
-        initODNs(this);
-        // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
+        //Load AD
+        loadAd();
+    }
+
+    private boolean loadAd() {
+     // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case TIMER_EVENT_TICK:
+                        showInterstitial();
+                        // send new TIMER_EVENT_TICK message
+                        sendEmptyMessageDelayed(TIMER_EVENT_TICK, 5000);
+                        break;
+                }
+            }
+        };
+        return AdIsLoaded;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHandler.removeMessages(TIMER_EVENT_TICK);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!AdIsLoaded){
+            mHandler.sendEmptyMessageDelayed(TIMER_EVENT_TICK, 5000);
+        }else{
+            mHandler.removeMessages(TIMER_EVENT_TICK);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mHandler.removeMessages(TIMER_EVENT_TICK);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeMessages(TIMER_EVENT_TICK);
     }
 
     private void initUI() {
@@ -49,7 +100,7 @@ public class ODNMainActivity extends AppCompatActivity {
         result_list=(TextView)findViewById(R.id.result_list);
     }
 
-    private void initODNs(Context mContext) {
+    private void initODNs() {
         mODNDao = new ODNDao(this);
         noteDomains = mODNDao.getODNs();
         StringBuffer result_str=new StringBuffer();
@@ -58,8 +109,8 @@ public class ODNMainActivity extends AppCompatActivity {
             result_str.append("ID:"+noteDomain.getOdn_id()+" "+"Comment:"+noteDomain.getOdn_comment()+" "+"Date:"+noteDomain.getOdn_date()+"\n");
             }
         }
-        result_list.setText("Size is:"+String.valueOf(noteDomains.size()+"\n"+result_str.toString()));
-        Toast.makeText(this,"Size is:"+String.valueOf(noteDomains.size()+"\n"+result_str.toString()),Toast.LENGTH_LONG).show();
+        result_list.setText("Size is:" + String.valueOf(noteDomains.size() + "\n" + result_str.toString()));
+        Log.i(TAG, "Size is:" + String.valueOf(noteDomains.size() + "\n" + result_str.toString()));
     }
 
     @Override
@@ -72,7 +123,7 @@ public class ODNMainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==REQUEST_CODE_ADD_ODN&&resultCode==1010){
-            initODNs(this);
+            initODNs();
         }
     }
 
@@ -113,8 +164,11 @@ public class ODNMainActivity extends AppCompatActivity {
 
             @Override
             public void onAdClosed() {
-                // Proceed to the next level.
-                goToNextLevel();
+                // Proceed to the next level
+                setContentView(R.layout.activity_odn_main);
+                initUI();
+                // get ODN list
+                initODNs();
             }
         });
         return interstitialAd;
@@ -125,6 +179,8 @@ public class ODNMainActivity extends AppCompatActivity {
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
             Toast.makeText(this, "Ad loaded", Toast.LENGTH_SHORT).show();
             mInterstitialAd.show();
+            AdIsLoaded=true;
+            mHandler.removeMessages(TIMER_EVENT_TICK);
         } else {
             Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
             goToNextLevel();
