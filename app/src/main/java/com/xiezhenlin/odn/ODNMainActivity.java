@@ -24,17 +24,9 @@ import java.util.ArrayList;
 
 public class ODNMainActivity extends AppCompatActivity {
     private static final String TAG="ODNMainActivity";
-    // Remove the below line after defining your own ad unit ID.
-    private static final String TOAST_TEXT = "Test ads are being shown. "
-            + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
     private static final String ODN_ABOUT_ACTION = "com.xiezhenlin.odn.about";
     private static final String ODN_SETTINGS_ACTION = "com.xiezhenlin.odn.settings";
     private static final String ODN_ADD_ACTION = "com.xiezhenlin.odn.add";
-
-    private InterstitialAd mInterstitialAd;
-    private static Handler mHandler;
-    private static final int TIMER_EVENT_TICK = 1000;
-    private boolean AdIsLoaded=false;
 
     private ODNDao mODNDao;
     private ArrayList<NoteDomain> noteDomains;
@@ -44,55 +36,31 @@ public class ODNMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Load AD
-        loadAd();
+        setContentView(R.layout.activity_odn_main);
+        initUI();
+        // get ODN list
+        initODNs();
     }
 
-    private boolean loadAd() {
-     // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case TIMER_EVENT_TICK:
-                        showInterstitial();
-                        // send new TIMER_EVENT_TICK message
-                        sendEmptyMessageDelayed(TIMER_EVENT_TICK, 5000);
-                        break;
-                }
-            }
-        };
-        return AdIsLoaded;
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mHandler.removeMessages(TIMER_EVENT_TICK);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(!AdIsLoaded){
-            mHandler.sendEmptyMessageDelayed(TIMER_EVENT_TICK, 5000);
-        }else{
-            mHandler.removeMessages(TIMER_EVENT_TICK);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mHandler.removeMessages(TIMER_EVENT_TICK);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeMessages(TIMER_EVENT_TICK);
     }
 
     private void initUI() {
@@ -144,59 +112,8 @@ public class ODNMainActivity extends AppCompatActivity {
             Intent intent = new Intent(ODN_ADD_ACTION);
             startActivityForResult(intent, REQUEST_CODE_ADD_ODN);
         } else if (id == R.id.action_test) {
-            showInterstitial();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private InterstitialAd newInterstitialAd() {
-        InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Proceed to the next level
-                setContentView(R.layout.activity_odn_main);
-                initUI();
-                // get ODN list
-                initODNs();
-            }
-        });
-        return interstitialAd;
-    }
-
-    private void showInterstitial() {
-        // Show the ad if it's ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            Toast.makeText(this, "Ad loaded", Toast.LENGTH_SHORT).show();
-            mInterstitialAd.show();
-            AdIsLoaded=true;
-            mHandler.removeMessages(TIMER_EVENT_TICK);
-        } else {
-            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-            goToNextLevel();
-        }
-    }
-
-    private void loadInterstitial() {
-        // Disable the next level button and load the ad.
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
-    private void goToNextLevel() {
-        // Show the next level and reload the ad to prepare for the level after.
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
     }
 }
