@@ -2,19 +2,25 @@ package com.xiezhenlin.odn;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiezhenlin.odn.dao.ODNDao;
 import com.xiezhenlin.odn.domain.NoteDomain;
-import com.xiezhenlin.odn.utils.ODNDateTools;
+import com.xiezhenlin.odn.utils.ODNTools;
 
 public class ODNADDActivity extends AppCompatActivity {
     private static final String TAG="ODNADDActivity";
+    private static final boolean DEBUG=false;
     private static final int ADD_ODN_RESULT_CODE=1010;
-    private EditText odnTitle;
+    private EditText odnComment;
+    private TextView odn_comment_account;
     private ODNDao mODNDao;
 
     @Override
@@ -40,7 +46,7 @@ public class ODNADDActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_odn_submit) {
-            if(!odnTitle.getText().toString().equals("")) {
+            if(!odnComment.getText().toString().equals("")) {
                 odnSubmit();
             }else {
                 Toast.makeText(this,R.string.add_odn_none,Toast.LENGTH_LONG).show();
@@ -56,8 +62,8 @@ public class ODNADDActivity extends AppCompatActivity {
     private void odnSubmit() {
         NoteDomain submitODNDomain=new NoteDomain();
         submitODNDomain.setOdn_id(1);
-        submitODNDomain.setOdn_comment(odnTitle.getText().toString());
-        submitODNDomain.setOdn_date(ODNDateTools.getDate());
+        submitODNDomain.setOdn_comment(odnComment.getText().toString());
+        submitODNDomain.setOdn_date(ODNTools.getDate());
         if(mODNDao.addODN(submitODNDomain)){
             Toast.makeText(this,R.string.odn_add_successed,Toast.LENGTH_LONG).show();
             setResult(ADD_ODN_RESULT_CODE);
@@ -71,6 +77,48 @@ public class ODNADDActivity extends AppCompatActivity {
      * init layout view
      */
     private void InitAddODN_UI() {
-        odnTitle=(EditText)findViewById(R.id.odn_context);
+        odnComment=(EditText)findViewById(R.id.odn_context);
+        odnComment.addTextChangedListener(new ODNEditChangedListener());
+        odn_comment_account=(TextView)findViewById(R.id.odn_comment_account);
     }
+    class ODNEditChangedListener implements TextWatcher {
+        private CharSequence temp;
+        private int editStart;
+        private int editEnd;
+        private final int charMaxNum = 10;
+        private android.support.v7.view.menu.ActionMenuItemView odn_action_MI;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            temp = s;
+            odn_action_MI=(android.support.v7.view.menu.ActionMenuItemView)findViewById(R.id.action_odn_submit);
+            odn_action_MI.setTitle(getResources().getString(R.string.add_odn_discard_menu));
+            odn_comment_account.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if(temp.length()>0){
+                odn_action_MI=(android.support.v7.view.menu.ActionMenuItemView)findViewById(R.id.action_odn_submit);
+                odn_action_MI.setTitle(getResources().getString(R.string.add_odn_done_menu));
+                //odn_action_MI.setTitle(R.string.add_odn_done_menu);
+                odn_comment_account.setText(String.valueOf(count));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            editStart = odnComment.getSelectionStart();
+            editEnd = odnComment.getSelectionEnd();
+            if (temp.length() > charMaxNum) {
+                Toast.makeText(getApplicationContext(), R.string.odn_outof_limit, Toast.LENGTH_LONG).show();
+                s.delete(editStart - 1, editEnd);
+                int tempSelection = editStart;
+                odnComment.setText(s);
+                odnComment.setSelection(tempSelection);
+            }
+
+        }
+    };
+
 }

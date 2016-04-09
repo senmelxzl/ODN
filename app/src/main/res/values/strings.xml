@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ODN</string>
     <string name="odn_about_title">One Day Note</string>
+    <string name="app_loading_tip">Loading</string>
 
     <string name="action_settings_odn">Settings</string>
     <string name="action_about_odn">About</string>
@@ -18,10 +19,14 @@
 
     <!--add ODN-->
     <string name="add_odn_done_menu">Done</string>
+    <string name="add_odn_discard_menu">Discard</string>
     <string name="add_odn_done_tip">Add ODN done!</string>
     <string name="odn_add_successed">Add ODN success!</string>
     <string name="odn_add_failed">Add ODN failed!</string>
     <string name="odn_add_tip">Note your mind and memory!</string>
     <string name="add_odn_none">ODN is none,Note it Now!</string>
+
+    <string name="open_gps_tip">Open GPS please!</string>
+    <string name="odn_outof_limit">Words has exceeded the limit!</string>
 
 </resources>

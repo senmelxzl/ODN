@@ -105,12 +105,10 @@ public class ODNWelcomeActivity extends Activity {
     private void showInterstitial() {
         // Show the ad if it's ready. Otherwise toast and reload the ad.
         if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            Toast.makeText(this, "Ad loaded", Toast.LENGTH_SHORT).show();
             mInterstitialAd.show();
             AdIsLoaded=true;
             mHandler.removeMessages(TIMER_EVENT_TICK);
         } else {
-            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
             goToNextLevel();
         }
     }
